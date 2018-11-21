@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TraqNote.Data.Views.Posts>
+@using GridMvc.Html
+@{
+    ViewBag.Title = Resource.indexPageTitle;
+}
+
+@*To not show header stuff...*@
+@*@{
+      Layout = null;
+  }*@
+
+<link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+<script src="@Url.Content("~/Scripts/jquery-1.9.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/gridmvc.min.js")"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+<div class="form-horizontal">
+
+    <h5> @Html.ActionLink(Resource.addNewPostText, "CreatePost", "Post")</h5>
+</div>
+<div class="code-cut">
+    @Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(c => c.TopicName).Titled("Topic").Filterable(true);
+    columns.Add(c => c.Title).Titled("Title").Filterable(true);
+    columns.Add(c => c.Content).Titled("Posts").Filterable(true);
+
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => Html.ActionLink("Edit", "Edit", "Post", new { id = o.PostId }, new { @class="glyphicon glyphicon-edit" }));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => Html.ActionLink("Details", "Details", "Summary", new { id = o.PostId }, new { @class="glyphicon glyphicon-info-sign" }));
+
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => Html.ActionLink("Delete", "Delete", "Post", new { id = o.PostId }, new { onclick = "return confirm('Are you sure you wish to delete this property?');", @class="glyphicon glyphicon-trash" }));
+
+}).WithPaging(10).Sortable(true)
+</div>

@@ -1,0 +1,97 @@
+﻿@model TraqNote.Data.Views.Posts
+
+@{
+    ViewBag.Title = Resource.editPostPageTitle;
+}
+
+<h4>Edit</h4>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.PostId, new { id = "postidhidden" })
+    @Html.HiddenFor(m => m.TopicName, new { id = "topicnamehidden" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Topic_Id, @"Topic:", htmlAttributes: new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Topic_Id,
+                Enumerable.Empty<SelectListItem>(),
+                "-- Loading Values --",
+                new { id = "topic" })
+            @Html.ValidationMessageFor(model => model.Topic_Id, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, @"Title:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", rows = "50" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Content, @"Content:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = "5", spellcheck = "true", placeholder = "Enter Content here" })
+            @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @* Load the ddl based on the id and set the selected value 
+        based on the hidden field value of topicnamehidden*@
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //DropDownLists Initialization
+            LoadDDL(SetDDLSelectedValue);
+        });
+
+        // This is the callback function
+        function SetDDLSelectedValue() {
+            // Get the text value from the hidden value e,g., the Topic Name
+            var tn = $('#topicnamehidden').val();
+            //alert(tn);
+            // Get the option index where the asigned "Toic Name' occurs in the ddl
+            var optVal = $("#topic option:contains('" + tn + "')").attr('value');
+            //alert(optVal);
+            // Set the ddl seleced value based on the "optVal" index value
+            $('#topic').val(optVal);
+        }
+
+        function LoadDDL(callback) {
+            $(function () {
+                $.getJSON('/topic/index', function (result) {
+                    var ddl = $('#topic');
+                    ddl.empty();
+                    $(result).each(function () {
+                        $(document.createElement('option'))
+                            .attr('value', this.Id)
+                            .text(this.TopicName)
+                            .appendTo(ddl);
+                    });
+                })
+                .done(function () {
+                    callback();
+                });
+            });
+        };
+    </script>
+}
+

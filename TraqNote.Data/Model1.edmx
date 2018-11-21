@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="traqnoteModel.Store" Provider="Npgsql" ProviderManifestToken="10.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="post">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="text" />
+          <Property Name="content" Type="text" />
+          <Property Name="topic_id" Type="int4" />
+          <Property Name="created_on" Type="date" />
+          <Property Name="modified_on" Type="date" />
+        </EntityType>
+        <EntityType Name="topic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="topic_name" Type="text" />
+          <Property Name="created_on" Type="date" />
+          <Property Name="modified_on" Type="date" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_name" Type="text" Nullable="false" />
+          <Property Name="password" Type="bytea" Nullable="false" />
+          <Property Name="session_data" Type="text" />
+          <Property Name="first_name" Type="text" />
+          <Property Name="last_name" Type="text" />
+          <Property Name="phone" Type="text" />
+          <Property Name="email_address" Type="text" />
+          <Property Name="comments" Type="text" />
+          <Property Name="active" Type="bool" />
+          <Property Name="created_by" Type="text" />
+          <Property Name="created_on" Type="timestamp" />
+          <Property Name="modified_by" Type="text" />
+          <Property Name="modified_on" Type="timestamp" />
+          <Property Name="cell_phone" Type="text" />
+          <Property Name="password_set_date" Type="timestamp" Nullable="false" />
+          <Property Name="grace_logins_used" Type="int2" />
+          <Property Name="consecutive_login_failures" Type="int2" Nullable="false" />
+          <Property Name="autologin" Type="bool" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6005: The data type 'hstore' is currently not supported for the target Entity Framework version; the column 'old_record' in the table 'traqnote.public.user_audit' was excluded.
+warning 6005: The data type 'hstore' is currently not supported for the target Entity Framework version; the column 'new_record' in the table 'traqnote.public.user_audit' was excluded.-->
+        <EntityType Name="user_audit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="action_timestamp" Type="timestamp" Nullable="false" />
+          <Property Name="actor" Type="text" Nullable="false" />
+          <Property Name="action" Type="text" Nullable="false" />
+        </EntityType>
+        <Association Name="topic_id_fkey">
+          <End Role="topic" Type="Self.topic" Multiplicity="0..1" />
+          <End Role="post" Type="Self.post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="topic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="post">
+              <PropertyRef Name="topic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="traqnoteModelStoreContainer">
+          <EntitySet Name="post" EntityType="Self.post" Schema="public" store:Type="Tables" />
+          <EntitySet Name="topic" EntityType="Self.topic" Schema="public" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="public" store:Type="Tables" />
+          <EntitySet Name="user_audit" EntityType="Self.user_audit" Schema="public" store:Type="Tables" />
+          <AssociationSet Name="topic_id_fkey" Association="Self.topic_id_fkey">
+            <End Role="topic" EntitySet="topic" />
+            <End Role="post" EntitySet="post" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="traqnoteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TraqnoteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="posts" EntityType="traqnoteModel.post" />
+          <EntitySet Name="topics" EntityType="traqnoteModel.topic" />
+          <AssociationSet Name="topic_id_fk" Association="traqnoteModel.topic_id_fk">
+            <End Role="topic" EntitySet="topics" />
+            <End Role="post" EntitySet="posts" />
+          </AssociationSet>
+          <EntitySet Name="users" EntityType="traqnoteModel.user" />
+          <EntitySet Name="user_audit" EntityType="traqnoteModel.user_audit" />
+        </EntityContainer>
+        <EntityType Name="post">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="topic_id" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_on" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="topic" Relationship="traqnoteModel.topic_id_fk" FromRole="post" ToRole="topic" />
+          <Property Name="modified_on" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="topic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="topic_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_on" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="posts" Relationship="traqnoteModel.topic_id_fk" FromRole="topic" ToRole="post" />
+          <Property Name="modified_on" Type="DateTime" Precision="0" />
+        </EntityType>
+        <Association Name="topic_id_fk">
+          <End Type="traqnoteModel.topic" Role="topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="traqnoteModel.post" Role="post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="topic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="post">
+              <PropertyRef Name="topic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="Binary" Nullable="false" MaxLength="2147483647" FixedLength="false" />
+          <Property Name="session_data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="first_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="last_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="email_address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="created_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_on" Type="DateTime" Precision="6" />
+          <Property Name="modified_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="modified_on" Type="DateTime" Precision="6" />
+          <Property Name="cell_phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="password_set_date" Type="DateTime" Nullable="false" Precision="6" />
+          <Property Name="grace_logins_used" Type="Int16" />
+          <Property Name="consecutive_login_failures" Type="Int16" Nullable="false" />
+          <Property Name="autologin" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user_audit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="action_timestamp" Type="DateTime" Nullable="false" Precision="6" />
+          <Property Name="actor" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="action" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="traqnoteModelStoreContainer" CdmEntityContainer="TraqnoteEntities">
+          <EntitySetMapping Name="posts">
+            <EntityTypeMapping TypeName="traqnoteModel.post">
+              <MappingFragment StoreEntitySet="post">
+                <ScalarProperty Name="modified_on" ColumnName="modified_on" />
+                <ScalarProperty Name="created_on" ColumnName="created_on" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="topic_id" ColumnName="topic_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="topics">
+            <EntityTypeMapping TypeName="traqnoteModel.topic">
+              <MappingFragment StoreEntitySet="topic">
+                <ScalarProperty Name="modified_on" ColumnName="modified_on" />
+                <ScalarProperty Name="created_on" ColumnName="created_on" />
+                <ScalarProperty Name="topic_name" ColumnName="topic_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="traqnoteModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="autologin" ColumnName="autologin" />
+                <ScalarProperty Name="consecutive_login_failures" ColumnName="consecutive_login_failures" />
+                <ScalarProperty Name="grace_logins_used" ColumnName="grace_logins_used" />
+                <ScalarProperty Name="password_set_date" ColumnName="password_set_date" />
+                <ScalarProperty Name="cell_phone" ColumnName="cell_phone" />
+                <ScalarProperty Name="modified_on" ColumnName="modified_on" />
+                <ScalarProperty Name="modified_by" ColumnName="modified_by" />
+                <ScalarProperty Name="created_on" ColumnName="created_on" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="email_address" ColumnName="email_address" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="session_data" ColumnName="session_data" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="user_name" ColumnName="user_name" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_audit">
+            <EntityTypeMapping TypeName="traqnoteModel.user_audit">
+              <MappingFragment StoreEntitySet="user_audit">
+                <ScalarProperty Name="action" ColumnName="action" />
+                <ScalarProperty Name="actor" ColumnName="actor" />
+                <ScalarProperty Name="action_timestamp" ColumnName="action_timestamp" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

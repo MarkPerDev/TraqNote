@@ -1,0 +1,26 @@
+﻿@model TraqNote.Data.Views.Summary
+
+@{
+    ViewBag.Title = Resource.detailsPostPageTitle;
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SummaryDetail, htmlAttributes: new { @class = "control-label col-md-2" })
+
+        </div>
+        <div class="form-group">
+            @Html.TextAreaFor(model => model.SummaryDetail, new { @class = "form-control", rows = "5", spellcheck = "true", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.SummaryDetail, "", new { @class = "text-danger" })
+        </div>
+    </div>
+}

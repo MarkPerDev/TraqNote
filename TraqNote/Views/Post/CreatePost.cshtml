@@ -1,0 +1,83 @@
+﻿@model TraqNote.Data.Views.Posts
+
+@{
+    ViewBag.Title = Resource.createPostPageTitle;
+}
+
+@*<h4>Create Note</h4>*@
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Topic_Id, @"Topic:", htmlAttributes: new { @class = "control-label col-md-2" })
+
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Topic_Id,
+                    Enumerable.Empty<SelectListItem>(),
+                    "-- Loading Values --",
+                    new { id = "topic" })
+                @Html.ValidationMessageFor(model => model.Topic_Id, "", new { @class = "text-danger" })
+                @Html.ActionLink("Add Topic", "CreateTopic", "Topic")
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, @"Title:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", rows = "50" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Content, @"Content:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = "100", spellcheck = "true", placeholder = "Enter Content here" })
+                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+        @Html.ActionLink(Resource.backToNotesText, "Index")
+    </div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*$(document).ready...kicks off on page load*@
+    @*Ajax call to the topic controller, index method *@
+    @*#topic references the id = "topic" at the DropDownListFor control above *@
+    @*.attr('value', this.Id) is the selected value.  .text(this.TopicName) is what is displayed...*@
+   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $.getJSON('/topic/index', function (result) {
+                    var ddl = $('#topic');
+                    ddl.empty();
+                    $(result).each(function () {
+                        $(document.createElement('option'))
+                            .attr('value', this.Id)
+                            .text(this.TopicName)
+                            .appendTo(ddl);
+                    });
+                });
+            });
+        });
+</script>
+       
+    }

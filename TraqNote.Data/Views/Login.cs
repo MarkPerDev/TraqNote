@@ -25,5 +25,7 @@ namespace TraqNote.Data.Views
 		public bool UseEmail { get; set; }
 
 		public int? UserId { get; set; }
+
+		public string EmailAddress { get; set; }
 	}
 }

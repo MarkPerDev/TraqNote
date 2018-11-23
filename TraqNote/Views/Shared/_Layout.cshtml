@@ -1,49 +1,44 @@
 ﻿<!DOCTYPE html>
 <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
-
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - TraqNote</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Styles.Render("~/Content/css")*@
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>*@
+
 
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <li>@Html.ActionLink("Register", "Register", "Account")</li>
-                    <li>@Html.ActionLink("Reset Password", "ForgotPassword")</li>
-                    @*<li>@Html.ActionLink("Login", "Login", "Account")</li>*@
-                }
+                    @Html.ActionLink("Register", "Registration", "Account")<br />
+                    @Html.ActionLink("Reset Password", "ForgotPassword")
+}
                 else
                 {
-                    @*<li>@Html.ActionLink("Admin", "Index", "Home", new { Area = "Admin" }, "")</li>
-                    <li>@Html.ActionLink("Sale", "Index", "Home", new { Area = "Sale" }, "")</li>*@
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</li>
-                    <li>@Html.ActionLink("Logout", "LogOff", "Account")</li>
+                    @Html.ActionLink("Home", "Index", "Home")
+                }
+
+                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    var identity = HttpContext.Current.User.Identity.Name;
+                    @Html.Label(string.Format("Welcome {0}!", identity))
+                    <span style="width: 10px"></span>
+                    @Html.ActionLink("Logout", "LogOff", "Account")
                 }
 
             </div>
-            @*<div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>*@
         </div>
     </div>
+
     <div class="container body-content">
         @RenderBody()
         <hr />

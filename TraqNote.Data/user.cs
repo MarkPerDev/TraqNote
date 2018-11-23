@@ -33,5 +33,6 @@ namespace TraqNote.Data
         public Nullable<short> grace_logins_used { get; set; }
         public short consecutive_login_failures { get; set; }
         public bool autologin { get; set; }
+        public string activation_code { get; set; }
     }
 }

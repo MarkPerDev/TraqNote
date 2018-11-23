@@ -48,6 +48,7 @@
           <Property Name="grace_logins_used" Type="int2" />
           <Property Name="consecutive_login_failures" Type="int2" Nullable="false" />
           <Property Name="autologin" Type="bool" Nullable="false" />
+          <Property Name="activation_code" Type="text" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6005: The data type 'hstore' is currently not supported for the target Entity Framework version; the column 'old_record' in the table 'traqnote.public.user_audit' was excluded.
@@ -156,6 +157,7 @@ warning 6005: The data type 'hstore' is currently not supported for the target E
           <Property Name="grace_logins_used" Type="Int16" />
           <Property Name="consecutive_login_failures" Type="Int16" Nullable="false" />
           <Property Name="autologin" Type="Boolean" Nullable="false" />
+          <Property Name="activation_code" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="user_audit">
           <Key>
@@ -197,6 +199,7 @@ warning 6005: The data type 'hstore' is currently not supported for the target E
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="traqnoteModel.user">
               <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="activation_code" ColumnName="activation_code" />
                 <ScalarProperty Name="autologin" ColumnName="autologin" />
                 <ScalarProperty Name="consecutive_login_failures" ColumnName="consecutive_login_failures" />
                 <ScalarProperty Name="grace_logins_used" ColumnName="grace_logins_used" />

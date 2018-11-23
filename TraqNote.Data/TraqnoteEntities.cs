@@ -89,5 +89,20 @@ namespace TraqNote.Data
 
 			return (entry != null) && (entry.State == EntityState.Deleted);
 		}
+
+		/// <summary>
+		/// Returns the hashed password. 
+		/// </summary>
+		public virtual IEnumerable<byte[]> GetDigestSHA512(string password)
+		{
+			try
+			{
+				return Database.SqlQuery<byte[]>(Functions.SQL_GET_DIGEST_SHA512, password);
+			}
+			catch
+			{
+				return null;
+			}
+		}
 	}
 }

@@ -82,6 +82,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertUtil.cs" />
+    <Compile Include="Functions.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -111,6 +113,7 @@
     <Compile Include="user_audit.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Views\Registration.cs" />
     <Compile Include="Views\Login.cs" />
     <Compile Include="Views\Summary.cs" />
     <Compile Include="Views\Topics.cs" />

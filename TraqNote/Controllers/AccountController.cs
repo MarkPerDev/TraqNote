@@ -4,6 +4,11 @@ using System.Web.Mvc;
 using System.Web.Security;
 using TraqNote.Data.Views;
 using TraqNote.Security;
+using System.Net;
+using System.Net.Mail;
+using TraqNote.Service;
+using TraqNote.Data;
+using System.Data.Entity;
 
 namespace TraqNote.Controllers
 {
@@ -21,15 +26,15 @@ namespace TraqNote.Controllers
 					if (Url.IsLocalUrl(returnUrl) && User.Identity.IsAuthenticated)
 					{
 						//save last login
-						//var user = new user();
-						//User user = userinfo.GetUserSession();
-						//user.LastLogIn = DateTime.UtcNow;
-						//using (var db = new JustFoodDBEntities())
-						//{
-						//	db.Entry(user).State = EntityState.Detached;
-						//	db.Entry(user).State = EntityState.Modified;
-						//	db.SaveChanges();
-						//}
+						var userinfo = new UserInfo();
+						var user = userinfo.GetUserSession();
+						//user. = DateTime.UtcNow;
+						using (var db = new TraqnoteEntities())
+						{
+							db.Entry(user).State = EntityState.Detached;
+							db.Entry(user).State = EntityState.Modified;
+							db.SaveChanges();
+						}
 						return Redirect(returnUrl);
 					}
 					else
@@ -52,9 +57,9 @@ namespace TraqNote.Controllers
 			FormsAuthentication.SignOut();
 			HttpContext.Response.Cookies.Clear();
 			// clear authentication cookie
-			HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
-			cookie1.Expires = DateTime.Now.AddYears(-1);
-			Response.Cookies.Add(cookie1);
+			HttpCookie currentCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+			currentCookie.Expires = DateTime.Now.AddYears(-1);
+			Response.Cookies.Add(currentCookie);
 				
 			// clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
 			HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
@@ -91,7 +96,6 @@ namespace TraqNote.Controllers
 				try
 				{
 						// TODO: Add insert logic here
-
 						return RedirectToAction("Index");
 				}
 				catch
@@ -142,6 +146,86 @@ namespace TraqNote.Controllers
 				{
 						return View();
 				}
+		}
+
+		[HttpGet]
+		public ActionResult Registration()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public ActionResult Registration(Registration reg)
+		{
+			bool statusRegistration = false;
+			string messageRegistration = string.Empty;
+			MembershipCreateStatus status;
+
+			if (ModelState.IsValid)
+			{
+				// Email Verification
+				string userName = Membership.GetUserNameByEmail(reg.Email);
+				if (!string.IsNullOrEmpty(userName))
+				{
+					ModelState.AddModelError("Warning Email", "Sorry: Email already Exists");
+					return View(reg);
+				}
+
+				//Save User Data 
+				using (var context = new TNMembershipProvider(reg.FirstName, reg.LastName))
+				{
+					context.CreateUser(reg.Username, reg.Password, reg.Email, "", "", true, null, out status);
+				}
+
+				//Verification Email
+				VerificationEmail(reg.Email, reg.ActivationCode.ToString());
+				messageRegistration = "Your account has been created successfully. ^_^";
+				statusRegistration = true;
+			}
+			else
+			{
+				messageRegistration = "Something Wrong!";
+			}
+			ViewBag.Message = messageRegistration;
+			ViewBag.Status = statusRegistration;
+
+			return View(reg);
+		}
+
+		[NonAction]
+		public void VerificationEmail(string email, string activationCode)
+		{
+			var url = string.Format("/Account/ActivationAccount/{0}", activationCode);
+			var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, url);
+
+			var fromEmail = new MailAddress("mehdi.rami2012@gmail.com", "Activation Account - AKKA");
+			var toEmail = new MailAddress(email);
+
+			var fromEmailPassword = "BigFoot*1";
+			string subject = "Activation Account !";
+
+			string body = "<br/> Please click on the following link in order to activate your account" + "<br/><a href='" + link + "'> Activation Account ! </a>";
+
+			var smtp = new SmtpClient
+			{
+				Host = "smtp.gmail.com",
+				Port = 587,
+				EnableSsl = true,
+				DeliveryMethod = SmtpDeliveryMethod.Network,
+				UseDefaultCredentials = false,
+				Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
+			};
+
+			using (var message = new MailMessage(fromEmail, toEmail)
+			{
+				Subject = subject,
+				Body = body,
+				IsBodyHtml = true
+
+			})
+
+				smtp.Send(message);
+
 		}
 	}
 }

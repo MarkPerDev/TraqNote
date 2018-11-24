@@ -198,10 +198,10 @@ namespace TraqNote.Controllers
 			var url = string.Format("/Account/ActivationAccount/{0}", activationCode);
 			var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, url);
 
-			var fromEmail = new MailAddress("mehdi.rami2012@gmail.com", "Activation Account - AKKA");
+			var fromEmail = new MailAddress("nomail@gmail.com", "Activation Account");
 			var toEmail = new MailAddress(email);
 
-			var fromEmailPassword = "BigFoot*1";
+			var fromEmailPassword = "";
 			string subject = "Activation Account !";
 
 			string body = "<br/> Please click on the following link in order to activate your account" + "<br/><a href='" + link + "'> Activation Account ! </a>";

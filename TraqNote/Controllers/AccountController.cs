@@ -6,6 +6,7 @@ using TraqNote.Data.Views;
 using TraqNote.Security;
 using System.Net;
 using System.Net.Mail;
+using TraqNote.Service;
 using TraqNote.Data;
 using System.Data.Entity;
 
@@ -27,6 +28,7 @@ namespace TraqNote.Controllers
 						//save last login
 						var userinfo = new UserInfo();
 						var user = userinfo.GetUserSession();
+						//user. = DateTime.UtcNow;
 						using (var db = new TraqnoteEntities())
 						{
 							db.Entry(user).State = EntityState.Detached;
@@ -59,7 +61,7 @@ namespace TraqNote.Controllers
 			currentCookie.Expires = DateTime.Now.AddYears(-1);
 			Response.Cookies.Add(currentCookie);
 				
-			// clear session cookie
+			// clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
 			HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
 			cookie2.Expires = DateTime.Now.AddYears(-1);
 			Response.Cookies.Add(cookie2);
@@ -155,9 +157,6 @@ namespace TraqNote.Controllers
 		[HttpPost]
 		public ActionResult Registration(Registration reg)
 		{
-			VerificationEmail(reg.Email, reg.ActivationCode.ToString());
-			return View(reg);
-
 			bool statusRegistration = false;
 			string messageRegistration = string.Empty;
 			MembershipCreateStatus status;
@@ -199,7 +198,7 @@ namespace TraqNote.Controllers
 			var url = string.Format("/Account/ActivationAccount/{0}", activationCode);
 			var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, url);
 
-			var fromEmail = new MailAddress("@gmail.com", "Activation Account - TraqNote");
+			var fromEmail = new MailAddress("nomail@gmail.com", "Activation Account");
 			var toEmail = new MailAddress(email);
 
 			var fromEmailPassword = "";

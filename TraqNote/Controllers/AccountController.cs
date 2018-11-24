@@ -6,7 +6,6 @@ using TraqNote.Data.Views;
 using TraqNote.Security;
 using System.Net;
 using System.Net.Mail;
-using TraqNote.Service;
 using TraqNote.Data;
 using System.Data.Entity;
 
@@ -200,7 +199,7 @@ namespace TraqNote.Controllers
 			var url = string.Format("/Account/ActivationAccount/{0}", activationCode);
 			var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, url);
 
-			var fromEmail = new MailAddress("markpero45@gmail.com", "Activation Account - TraqNote");
+			var fromEmail = new MailAddress("@gmail.com", "Activation Account - TraqNote");
 			var toEmail = new MailAddress(email);
 
 			var fromEmailPassword = "";

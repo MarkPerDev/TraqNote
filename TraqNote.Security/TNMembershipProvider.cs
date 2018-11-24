@@ -16,7 +16,6 @@ namespace TraqNote.Security
 {
 	public class TNMembershipProvider : MembershipProvider, IDisposable
 	{
-
 		private readonly int newPasswordLength = 8;
 		private string connectionString;
 		private string applicationName;
@@ -33,9 +32,6 @@ namespace TraqNote.Security
 		private MachineKeySection machineKey; //Used when determining encryption key values.
 		public const string CACHE_KEY_SESSION_DATA = @"keySessionData:";
 		public const string CONFIG_KEY_CONNECTION_STRING_NAME = @"connectionStringName";
-
-		//private static object _lockSessionUpdate = new object();
-
 		private string _newUserFirstName;
 		private string _newUserLastName;
 
@@ -51,12 +47,12 @@ namespace TraqNote.Security
 			_newUserLastName = lastName;
 		}
 
-
 		private enum FailureType
 		{
 			Password = 1,
 			PasswordAnswer = 2
 		}
+
 		public override string ApplicationName
 		{
 			get
@@ -173,7 +169,6 @@ namespace TraqNote.Security
 
 			return configValue;
 		}
-
 
 
 		public override void Initialize(string name, NameValueCollection config)
@@ -480,26 +475,6 @@ namespace TraqNote.Security
 
 			return password;
 		}
-
-		//public string GetMD5HashStringFromByte(byte[] bytes, bool upperCase)
-		//{
-		//	StringBuilder result = new StringBuilder(bytes.Length * 2);
-
-		//	for (int i = 0; i < bytes.Length; i++)
-		//		result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
-
-		//	return result.ToString();
-		//}
-
-		//public string GetMD5HashByteFromString(, bool upperCase)
-		//{
-		//	StringBuilder result = new StringBuilder(bytes.Length * 2);
-
-		//	for (int i = 0; i < bytes.Length; i++)
-		//		result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
-
-		//	return result.ToString();
-		//}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
 		{

@@ -28,7 +28,6 @@ namespace TraqNote.Controllers
 						//save last login
 						var userinfo = new UserInfo();
 						var user = userinfo.GetUserSession();
-						//user. = DateTime.UtcNow;
 						using (var db = new TraqnoteEntities())
 						{
 							db.Entry(user).State = EntityState.Detached;
@@ -61,7 +60,7 @@ namespace TraqNote.Controllers
 			currentCookie.Expires = DateTime.Now.AddYears(-1);
 			Response.Cookies.Add(currentCookie);
 				
-			// clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
+			// clear session cookie
 			HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
 			cookie2.Expires = DateTime.Now.AddYears(-1);
 			Response.Cookies.Add(cookie2);
@@ -157,6 +156,9 @@ namespace TraqNote.Controllers
 		[HttpPost]
 		public ActionResult Registration(Registration reg)
 		{
+			VerificationEmail(reg.Email, reg.ActivationCode.ToString());
+			return View(reg);
+
 			bool statusRegistration = false;
 			string messageRegistration = string.Empty;
 			MembershipCreateStatus status;
@@ -198,10 +200,10 @@ namespace TraqNote.Controllers
 			var url = string.Format("/Account/ActivationAccount/{0}", activationCode);
 			var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, url);
 
-			var fromEmail = new MailAddress("mehdi.rami2012@gmail.com", "Activation Account - AKKA");
+			var fromEmail = new MailAddress("markpero45@gmail.com", "Activation Account - TraqNote");
 			var toEmail = new MailAddress(email);
 
-			var fromEmailPassword = "BigFoot*1";
+			var fromEmailPassword = "";
 			string subject = "Activation Account !";
 
 			string body = "<br/> Please click on the following link in order to activate your account" + "<br/><a href='" + link + "'> Activation Account ! </a>";

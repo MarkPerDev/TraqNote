@@ -5,7 +5,7 @@
 /* Grid */
 table.grid-table { margin: 0; }
     table.grid-table .grid-wrap { padding: 0; position: relative; }
-    table.grid-table .grid-empty-text { color: #666; }
+    table.grid-table .grid-empty-text { color: #999; }
 /*table.trimmed -text {
     height: 15px;
     white-space: nowrap;
@@ -20,7 +20,7 @@ table.grid-table .grid-header .sorted-desc .grid-sort-arrow:after { content: " \
 table.grid-table .grid-header > .grid-header-title { width: 100%; margin-right: 15px; white-space: nowrap; }
 
 /* Grid body */
-table.grid-table tr.grid-row-selected td { background: #4888C2 !important; color: white; }
+table.grid-table tr.grid-row-selected td { background: #4888C2 !important; color:darkgrey; }
 table.grid-table tr.grid-row-selected a { color: white; }
 
 /* Grid filtering */

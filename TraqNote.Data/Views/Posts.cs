@@ -14,8 +14,9 @@ namespace TraqNote.Data.Views
     [StringLength(50, MinimumLength = 2, ErrorMessage = "* A Valid title is required.")]
     [Display(Name = "Title")]
     public string Title { get; set; }
-		[Required]
-		[StringLength(1000, MinimumLength = 2, ErrorMessage = "* Valid content is required.")]
+
+		
+		[Required]		
 		[Display(Name = "Content")]
 		public string Content { get; set; }
 		public string TopicName { get; set; }

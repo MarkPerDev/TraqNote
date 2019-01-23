@@ -6,8 +6,8 @@
 
 @*To not show header stuff...*@
 @*@{
-      Layout = null;
-  }*@
+        Layout = null;
+    }*@
 
 <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
@@ -15,13 +15,18 @@
 <script src="@Url.Content("~/Scripts/jquery-1.9.1.min.js")"></script>
 <script src="@Url.Content("~/Scripts/gridmvc.min.js")"></script>
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
 
 @*<div class="form-horizontal">*@
-
-<h4>@Html.ActionLink(Resource.addNewPostText, "CreatePost", "Post")</h4>
+@using (Html.BeginForm())
+{
+    <h4>@Html.ActionLink(Resource.addNewPostText, "CreatePost", "Post")</h4>
 @*</div>*@
 <div class="code-cut">
+    <div class="form-group">
+        Search Posts: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </div>
     @Html.Grid(Model).Columns(columns =>
 {
     columns.Add(c => c.TopicName).Titled("Topic").Filterable(true);
@@ -32,18 +37,19 @@
         .Encoded(false)
         .Sanitized(false)
         .SetWidth(30)
-        .RenderValueAs(o => Html.ActionLink("Edit", "Edit", "Post", new { id = o.PostId }, new { @class="glyphicon glyphicon-edit" }));
+        .RenderValueAs(o => Html.ActionLink("Edit", "Edit", "Post", new { id = o.PostId }, new { @class = "glyphicon glyphicon-edit" }));
     columns.Add()
         .Encoded(false)
         .Sanitized(false)
         .SetWidth(30)
-        .RenderValueAs(o => Html.ActionLink("Details", "Details", "Summary", new { id = o.PostId }, new { @class="glyphicon glyphicon-info-sign" }));
+        .RenderValueAs(o => Html.ActionLink("Details", "Details", "Summary", new { id = o.PostId }, new { @class = "glyphicon glyphicon-info-sign" }));
 
     columns.Add()
         .Encoded(false)
         .Sanitized(false)
         .SetWidth(30)
-        .RenderValueAs(o => Html.ActionLink("Delete", "Delete", "Post", new { id = o.PostId }, new { onclick = "return confirm('Are you sure you wish to delete this property?');", @class="glyphicon glyphicon-trash" }));
+        .RenderValueAs(o => Html.ActionLink("Delete", "Delete", "Post", new { id = o.PostId }, new { onclick = "return confirm('Are you sure you wish to delete this property?');", @class = "glyphicon glyphicon-trash" }));
 
 }).WithPaging(10).Sortable(true)
 </div>
+}

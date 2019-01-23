@@ -38,13 +38,17 @@ namespace TraqNote.Service
 
 		#endregion Constructors
 
-		/// <summary>
-		/// Get all posts
-		/// </summary>
-		/// <returns></returns>
-		public IList<Posts> GetAllPosts()
+		public IList<Posts> GetAllPosts(string searchString)
 		{
-			return DbContext.posts.Select(x =>
+			var posts = from p in DbContext.posts
+									select p;
+
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				posts = posts.Where(p => p.content.ToLower().Contains(searchString.ToLower()));
+			}
+
+			return posts.Select(x =>
 									new Posts()
 									{
 										PostId = x.id,

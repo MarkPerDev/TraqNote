@@ -17,7 +17,7 @@ namespace TraqNote.Controllers
 			}
 			else
 			{
-				return View(GetAllPosts());
+				return View(GetAllPosts(string.Empty));
 			}
 		}
 
@@ -40,12 +40,20 @@ namespace TraqNote.Controllers
 			return View();
 		}
 
+		[HttpPost]
+		public ActionResult Index(string searchString)
+		{
+			// load details view based on post id
+			return View(GetAllPosts(searchString));
+		}
+
 		#region Private methods
-		private IList<Posts> GetAllPosts()
+
+		private IList<Posts> GetAllPosts(string searchString)
 		{
 			using (var context = new PostServices())
 			{
-				return context.GetAllPosts();
+				return context.GetAllPosts(searchString);
 			}
 		}
 

@@ -22,7 +22,7 @@ namespace TraqNote.UnitTest
 		{
 			using (var svc = new PostServices())
 			{
-				var result = svc.GetAllPosts();
+				var result = svc.GetAllPosts(string.Empty);
 
 				Assert.IsNotNull(result, @"Was expecting a non-null result set");
 			}
